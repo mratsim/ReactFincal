@@ -1,0 +1,13 @@
+{
+  "name": "ReactFincal",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "dependencies": {
+    "decimal.js": "^6.0.0",
+    "react": "15.2.1",
+    "react-native": "0.31.0"
+  }
+}
