@@ -18,6 +18,22 @@ const inputButtons = [
     [0, '.', '=', '+']
 ];
 
+// key, type, precedence/priority 1-->10, associativity
+const  mapButtons = new Map()
+  .set(1,"digit","","")
+  .set(2,"digit","","")
+  .set(3,"digit","","")
+  .set(4,"digit","","")
+  .set(5,"digit","","")
+  .set(6,"digit","","")
+  .set(7,"digit","","")
+  .set(8,"digit","","")
+  .set(9,"digit","","")
+  .set('/',"binary operator",1,"left")
+  .set('*',"binary operator",1,"left")
+  .set('+',"binary operator",0,"left")
+  .set('-',"binary operator",0,"left");
+
 class ReactFincal extends Component {
   render() {
     return (
