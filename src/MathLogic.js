@@ -29,17 +29,21 @@ export const mapButtons = new Map()
   .set('-', ["binary operator", 0, "left"])
   .set('CE|C', ["reset"])
   .set('+|-', ["toggleSign"])
-  .set('=', ["="]);
+  .set('=', ["="])
+  .set('(', ["("])
+  .set(')',[')']);
 
+//Strings that are replaced on digit input
+//"Parenthesis Mismatch"
 
 // Operator/Operand logic
 //Operations corresponding to Operators
 const Operations = { //Need to precise Decimal otherwise JS complains about add/div/mul/sub not existing
-'/': ([x,y, ...ys]) => [Decimal(x).div(y),...ys],
-'*': ([x,y, ...ys]) => [Decimal(x).mul(y),...ys],
-'+': ([x,y, ...ys]) => [Decimal(x).add(y),...ys],
-'-': ([x,y, ...ys]) => [Decimal(x).sub(y),...ys],
-}
+'/': ([x,y, ...ys]) => [Decimal(y).div(x),...ys],
+'*': ([x,y, ...ys]) => [Decimal(y).mul(x),...ys],
+'+': ([x,y, ...ys]) => [Decimal(y).add(x),...ys],
+'-': ([x,y, ...ys]) => [Decimal(y).sub(x),...ys]
+};
 
 //Calling those operations
 const ApplyOp = (iniArr, op) => isNumeric(Number(op)) ? [Decimal(Number(op)),...iniArr] : Operations[op](iniArr);
@@ -51,8 +55,27 @@ export const opLogic = {
     'toggleSign': (input,displayState) => opSign(input, displayState),
     'reset': (input,displayState) => opReset(input, displayState),
     'binary operator': (input,displayState) => opBin(input, displayState),
-    '=': (input,displayState) => opEqual(input, displayState)
+    '=': (input,displayState) => opEqual(input, displayState),
+    '(': (input,displayState) => opLPar(input, displayState),
+    ')': (input,displayState) => opRPar(input, displayState)
 };
+
+const helperCheckPush = (displayState) => {
+        const {displayValue,infix} = displayState
+        if (infix.length>0) {
+            switch (infix.peek()) {
+                case '=':
+                    displayState.infix = [] //if we just finished a compute, reset infix and RPN
+                    displayState.RPN   = []
+                    break;
+                case ')':
+                    return displayState; //if we just had an ending parenthesis do not add again the previous value
+            }
+        }
+        displayState.infix.push(displayValue)
+        displayState.RPN.push(displayValue)
+        return displayState;
+}
 
 const opDigit = (input,displayState) => {
           const {displayValue, replaceDisplay} = displayState
@@ -79,13 +102,14 @@ const opSign = (_,displayState) => {
         const {displayValue} = displayState
         const newValue = parseFloat(displayValue) * -1
 
-          displayState.displayValue= String(newValue)
+        displayState.displayValue= String(newValue)
         return displayState;
 };
 
 const opReset = (_,displayState) => {
 
-          displayState = { displayCalc:"",
+          displayState = {
+            displayCalc:"",
             displayValue: "0",
             infix: [],
             RPN: [],
@@ -94,20 +118,13 @@ const opReset = (_,displayState) => {
           }
         
         return displayState;
-}
+};
 
 const opBin = (input,displayState) => {
-        const {displayValue, replaceDisplay} = displayState
         const inpmap = mapButtons.get(input)
 
-        if (replaceDisplay) {
-          return displayState; //ignore second operator if two in a row
-        }
-
-        //Beware of manipulating state directly, use Array.prototype slice to create copy instead ?
-        displayState.infix.push(displayValue)
+        displayState = helperCheckPush(displayState) //Check adjustment to infix and RPN display
         displayState.infix.push(input)
-        displayState.RPN.push(displayValue)
 
         //Left-associative operator : pop lower precedence op on the stack
         //Right-associative operator : pop equal or lower precedence op on the stack
@@ -127,12 +144,11 @@ const opBin = (input,displayState) => {
           displayState.replaceDisplay = true
         
         return displayState;
-}
+};
 
 const opEqual = (input,displayState) => {
 
-        displayState.infix.push(displayState.displayValue)
-        displayState.RPN.push(displayState.displayValue)
+        displayState = helperCheckPush(displayState) //Check adjustment to infix and RPN display
 
         while (!(displayState.stack.length == 0)) {
           displayState.RPN.push(displayState.stack.pop());
@@ -142,10 +158,47 @@ const opEqual = (input,displayState) => {
         var stackRPN = []
         const result = displayState.RPN.reduce(ApplyOp,stackRPN)[0].toNumber()
 
+        displayState.infix.push(input)
 
           displayState.displayCalc = 'Classic: ' + displayState.infix.join(" ") + ' | RPN: ' + displayState.RPN.join(" ")
           displayState.displayValue = result
           displayState.replaceDisplay = true
         
         return displayState;
-}
+};
+
+const opLPar = (input,displayState) => {
+    const {infix} = displayState
+    if (infix.length>0 && infix.peek()=='=') {
+                    displayState.infix = [] //if we just finished a compute, reset infix and RPN
+                    displayState.RPN   = [] //Helper function has extra functionnality
+    }
+
+    displayState.stack.push(input)
+    displayState.infix.push(input)
+    displayState.replaceDisplay = true
+
+    return displayState;
+};
+
+const opRPar = (input,displayState) => {
+
+    if (!displayState.stack.includes("(")) {
+        alert("Parenthesis Mismatch")
+        return opReset(input,displayState);
+    }
+
+    displayState = helperCheckPush(displayState)
+    displayState.infix.push(input)
+
+    while (displayState.stack.peek()!='(') {
+        displayState.RPN.push(displayState.stack.pop());
+    }
+    displayState.stack.pop()
+
+
+    displayState.displayCalc = 'Classic: ' + displayState.infix.join(" ") + ' | RPN: ' + displayState.RPN.join(" ")
+    displayState.replaceDisplay = true
+
+    return displayState;
+};

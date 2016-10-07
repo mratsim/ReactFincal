@@ -18,7 +18,7 @@ const inputButtons = [
   [4, 5, 6, '*'],
   [7, 8, 9, '-'],
   [0, '.', '+|-', '+'],
-  ['CE|C', '=']
+  ['CE|C', '(',')','=']
 ];
 
 export default class ReactFincal extends Component {
@@ -70,7 +70,6 @@ export default class ReactFincal extends Component {
 
   _onInputButtonPressed(input) {
     const opType = (mapButtons.get(input))[0]
-
     this.setState(opLogic[opType](input,this.state))
   }
 }

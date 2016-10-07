@@ -1,0 +1,16 @@
+//Test
+
+4+18/(9-3) attendu 7
+
+(1+2) * 3 : attendu 9 (faire attention à ce que le 3 n'apparaisse pas deux fois)
+
+1+2(3)
+(1+2)(3)
+12 - 3/3
+
+
+(risque d'inversion des operand)
+10+2
+10/2
+10*2
+10-2
