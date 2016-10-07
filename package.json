@@ -6,8 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "babel-preset-react-native": "^1.9.0",
     "decimal.js": "^6.0.0",
-    "react": "15.2.1",
-    "react-native": "0.31.0"
+    "react": "15.3.2",
+    "react-native": "0.34.1"
+  },
+  "devDependencies": {
+    "babel-preset-react-native": "^1.9.0"
   }
 }

@@ -5,6 +5,20 @@ var Style = StyleSheet.create({
         flex: 1 /* flex: 1 - full width and height */
     },
 
+    displayCalculus: {
+        flex: 1.5,
+        backgroundColor: '#193441',
+        justifyContent: 'center'
+    },
+
+    displayCalcTxt: {
+        color: 'white',
+        fontSize: 10,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        padding: 20
+    },
+
     displayContainer: {
         flex: 2, /* flex: 2 20% root container */
         backgroundColor: '#193441',
