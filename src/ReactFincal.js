@@ -59,11 +59,11 @@ export default class ReactFincal extends Component {
     super(props);
 
     this.state = {
-      displayCalc: "",
       displayValue: "0",
       infix: [],
       RPN: [],
       stack: [],
+      displayCalc: "",
       replaceDisplay: true
     }
   }
@@ -71,6 +71,9 @@ export default class ReactFincal extends Component {
   _onInputButtonPressed(input) {
     const opType = (mapButtons.get(input))[0]
     this.setState(opLogic[opType](input,this.state))
+    this.setState({
+      displayCalc: 'Classic: ' + this.state.infix.join(" ") + '    | RPN: ' + this.state.RPN.join(" ") //TODO flexible placement
+  })
   }
-}
+};
 AppRegistry.registerComponent('ReactFincal', () => ReactFincal);

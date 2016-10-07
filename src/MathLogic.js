@@ -109,7 +109,7 @@ const opSign = (_,displayState) => {
 const opReset = (_,displayState) => {
 
           displayState = {
-            displayCalc:"",
+            displayCalc:"", //will be set properly in ReactFincal.js
             displayValue: "0",
             infix: [],
             RPN: [],
@@ -126,6 +126,8 @@ const opBin = (input,displayState) => {
         displayState = helperCheckPush(displayState) //Check adjustment to infix and RPN display
         displayState.infix.push(input)
 
+        //TODO close parenthesis
+
         //Left-associative operator : pop lower precedence op on the stack
         //Right-associative operator : pop equal or lower precedence op on the stack
         while (displayState.stack.length != 0 &&
@@ -140,7 +142,6 @@ const opBin = (input,displayState) => {
 
         displayState.stack.push(input)
 
-          displayState.displayCalc = 'Classic: ' + displayState.infix.join(" ") + ' | RPN: ' + displayState.RPN.join(" ")
           displayState.replaceDisplay = true
         
         return displayState;
@@ -160,7 +161,6 @@ const opEqual = (input,displayState) => {
 
         displayState.infix.push(input)
 
-          displayState.displayCalc = 'Classic: ' + displayState.infix.join(" ") + ' | RPN: ' + displayState.RPN.join(" ")
           displayState.displayValue = result
           displayState.replaceDisplay = true
         
@@ -196,8 +196,6 @@ const opRPar = (input,displayState) => {
     }
     displayState.stack.pop()
 
-
-    displayState.displayCalc = 'Classic: ' + displayState.infix.join(" ") + ' | RPN: ' + displayState.RPN.join(" ")
     displayState.replaceDisplay = true
 
     return displayState;
