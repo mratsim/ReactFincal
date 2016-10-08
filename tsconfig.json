@@ -10,7 +10,8 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "suppressImplicitAnyIndexErrors": true
+        "suppressImplicitAnyIndexErrors": true,
+        "lib":["es2016","dom"]
     },
     "filesGlob": [
         "typings/**/*.d.ts",

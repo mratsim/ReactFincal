@@ -5,6 +5,7 @@ import { View, Text, AppRegistry} from "react-native";
 import Style from "./Style";
 import InputButton from "./InputButton";
 import {opLogic, mapButtons} from "./MathLogic";
+import {CalcState} from "./interfaces";
 
 // Define the input buttons that will be displayed in the calculator.
 const inputButtons = [
@@ -14,16 +15,6 @@ const inputButtons = [
   [0, ".", "+|-", "+"],
   ["CE|C", "(", ")", "="]
 ];
-
-export interface CalcState {
-  displayValue?: string;
-  infix?: Array<string | number>;
-  RPN?: Array<string | number>;
-  stack?: Array<string | number>;
-  displayCalc?: string;
-  replaceDisplay?: boolean;
-  selectedSymbol?: string | number;
-}
 
 export default class ReactFincal extends Component<{}, CalcState> {
   render() {

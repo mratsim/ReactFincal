@@ -2,18 +2,20 @@
 
 import {CalcState} from "./ReactFincal";
 
-// Implement peek for array (used as stack)
-interface Array<T>{
-    peek(): T;
-};
+let Decimal = require("decimal.js");
 
-Array.prototype["peek"] = function<T>(): T {
+// Implement peek for array (used as stack)
+declare global {
+    interface Array<T> {
+        peek: () => T;
+    }
+}
+
+Array.prototype.peek = function(): any {
   return this[this.length - 1];
 };
 
 type strnum = string | number
-
-let Decimal = require("decimal.js");
 
 // Implement isNumeric check
 const isNumeric = (n: any) => typeof n === "number" && !isNaN(n);
