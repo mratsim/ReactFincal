@@ -1,29 +1,30 @@
 /// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
 
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  TouchableHighlight,
-  AppRegistry
-} from "react-native";
-import * as Style from "./Style";
-import * as InputButton from "./InputButton";
-import {
-  opLogic,
-  mapButtons
-} from "./MathLogic";
+import { View, Text, AppRegistry} from "react-native";
+import Style from "./Style";
+import InputButton from "./InputButton";
+import { opLogic, mapButtons} from "./MathLogic";
 
 // Define the input buttons that will be displayed in the calculator.
 const inputButtons = [
-  [1, 2, 3, '/'],
-  [4, 5, 6, '*'],
-  [7, 8, 9, '-'],
-  [0, '.', '+|-', '+'],
-  ['CE|C', '(',')','=']
+  [1, 2, 3, "/"],
+  [4, 5, 6, "*"],
+  [7, 8, 9, "-"],
+  [0, ".", "+|-", "+"],
+  ["CE|C", "(", ")", "="]
 ];
 
-export default class ReactFincal extends Component {
+interface CalcState {
+  displayValue?: string;
+  infix?: Array<string | number>;
+  RPN?: Array<string | number>;
+  stack?: Array<string | number>;
+  displayCalc?: string;
+  replaceDisplay?: boolean;
+  selectedSymbol?: string | number;
+}
+export default class ReactFincal extends Component<{}, CalcState> {
   render() {
     return (
       <View style={Style.rootContainer}>
@@ -34,10 +35,10 @@ export default class ReactFincal extends Component {
           <Text style={Style.displayText}>{this.state.displayValue}</Text>
         </View>
         <View style={Style.inputContainer}>
-          {this._renderInputButtons() }
+          {this._renderInputButtons()}
         </View>
       </View>
-    )
+    );
   }
 
   /**
@@ -51,7 +52,7 @@ export default class ReactFincal extends Component {
         {nested.map(input => <InputButton value={input}
           key={input}
           highlight={this.state.selectedSymbol === input}
-          onPress={this._onInputButtonPressed.bind(this, input) } />) }
+          onPress={this._onInputButtonPressed.bind(this, input)} />)}
       </View>);
 
     return views;
@@ -66,16 +67,17 @@ export default class ReactFincal extends Component {
       RPN: [],
       stack: [],
       displayCalc: "",
-      replaceDisplay: true
-    }
+      replaceDisplay: true,
+      selectedSymbol: null
+    };
   }
 
   _onInputButtonPressed(input) {
-    const opType = (mapButtons.get(input))[0]
-    this.setState(opLogic[opType](input,this.state))
+    const opType = (mapButtons.get(input))[0];
+    this.setState(opLogic[opType](input, this.state));
     this.setState({
-      displayCalc: 'Classic: ' + this.state.infix.join(" ") + '    | RPN: ' + this.state.RPN.join(" ") //TODO flexible placement
-  })
+      displayCalc: "Classic: " + this.state.infix.join(" ") + "    | RPN: " + this.state.RPN.join(" ") // TODO flexible placement
+    });
   }
 };
-AppRegistry.registerComponent('ReactFincal', () => ReactFincal);
+AppRegistry.registerComponent("ReactFincal", () => ReactFincal);

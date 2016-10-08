@@ -2,16 +2,21 @@
 /// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
 
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
-    View,
     Text,
     TouchableHighlight,
-} from 'react-native';
+} from "react-native";
+import Style from "./Style";
 
-import * as Style from './Style';
+// Typescript Interfaces
+interface InpProps {
+    highlight: any;
+    onPress: any;
+    value: any;
+}
 
-export default class InputButton extends Component {
+export default class InputButton extends Component<InpProps, {}> {
 
     render() {
         return (
@@ -20,7 +25,7 @@ export default class InputButton extends Component {
                                 onPress={this.props.onPress}>
                 <Text style={Style.inputButtonText}>{this.props.value}</Text>
             </TouchableHighlight>
-        )
+        );
     }
 
 }

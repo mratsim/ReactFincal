@@ -1,15 +1,13 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        //"module": "commonjs", //es5 + CommonJS or ES6 only
         "moduleResolution": "node",
         "target": "es6",
         "jsx": "react",
         "noImplicitAny": false,
         "sourceMap": true,
         "outDir": "tsout",
-        //"rootDir": "src",
-        "allowSyntheticDefaultImports": false,
+        "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true
     },
