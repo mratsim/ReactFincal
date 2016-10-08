@@ -1,4 +1,6 @@
-var Decimal = require('decimal.js');
+/// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
+
+let Decimal = require("decimal.js");
 
 // Implement peek for array (used as stack)
 Array.prototype.peek = function () {

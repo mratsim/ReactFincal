@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native';
+/// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
 
-var Style = StyleSheet.create({
+import { StyleSheet } from "react-native";
+
+let Style = StyleSheet.create({
     rootContainer: {
         flex: 1 /* flex: 1 - full width and height */
     },

@@ -1,1 +1,2 @@
-import ReactFincal from './src/ReactFincal';
+// retrieve Typescript output
+require("./tsout/root.android.js");

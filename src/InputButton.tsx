@@ -1,4 +1,6 @@
 // InputButton.js
+/// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
+
 
 import React, { Component } from 'react';
 import {
@@ -7,7 +9,7 @@ import {
     TouchableHighlight,
 } from 'react-native';
 
-import Style from './Style';
+import * as Style from './Style';
 
 export default class InputButton extends Component {
 

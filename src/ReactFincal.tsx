@@ -1,16 +1,18 @@
-import React, { Component } from 'react';
+/// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
+
+import React, { Component } from "react";
 import {
   View,
   Text,
   TouchableHighlight,
   AppRegistry
-} from 'react-native';
-import Style from './Style';
-import InputButton from './InputButton';
+} from "react-native";
+import * as Style from "./Style";
+import * as InputButton from "./InputButton";
 import {
   opLogic,
   mapButtons
-} from './MathLogic';
+} from "./MathLogic";
 
 // Define the input buttons that will be displayed in the calculator.
 const inputButtons = [
