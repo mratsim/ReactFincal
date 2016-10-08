@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { View, Text, AppRegistry} from "react-native";
 import Style from "./Style";
 import InputButton from "./InputButton";
-import { opLogic, mapButtons} from "./MathLogic";
+import {opLogic, mapButtons} from "./MathLogic";
 
 // Define the input buttons that will be displayed in the calculator.
 const inputButtons = [
@@ -15,7 +15,7 @@ const inputButtons = [
   ["CE|C", "(", ")", "="]
 ];
 
-interface CalcState {
+export interface CalcState {
   displayValue?: string;
   infix?: Array<string | number>;
   RPN?: Array<string | number>;
@@ -24,6 +24,7 @@ interface CalcState {
   replaceDisplay?: boolean;
   selectedSymbol?: string | number;
 }
+
 export default class ReactFincal extends Component<{}, CalcState> {
   render() {
     return (
@@ -45,7 +46,7 @@ export default class ReactFincal extends Component<{}, CalcState> {
    * For each row in `inputButtons`, create a row View and add create an InputButton for each input in the row.
    */
   _renderInputButtons() {
-    let views = [];
+    let views: JSX.Element[] = [];
 
     views = inputButtons.map(nested =>
       <View style={Style.inputRow} key={nested[0]}>
@@ -58,7 +59,7 @@ export default class ReactFincal extends Component<{}, CalcState> {
     return views;
   }
 
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
 
     this.state = {
@@ -72,8 +73,8 @@ export default class ReactFincal extends Component<{}, CalcState> {
     };
   }
 
-  _onInputButtonPressed(input) {
-    const opType = (mapButtons.get(input))[0];
+  _onInputButtonPressed(input: string|number) {
+    const opType: string = (mapButtons.get(input))[0];
     this.setState(opLogic[opType](input, this.state));
     this.setState({
       displayCalc: "Classic: " + this.state.infix.join(" ") + "    | RPN: " + this.state.RPN.join(" ") // TODO flexible placement

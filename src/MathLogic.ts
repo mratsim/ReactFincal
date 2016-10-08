@@ -1,17 +1,22 @@
 /// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
 
-let Decimal = require("decimal.js");
+import {CalcState} from "./ReactFincal";
 
 // Implement peek for array (used as stack)
-interface Array {
-    peek(): string|number;
+interface Array<T>{
+    peek(): T;
 };
-Array.prototype["peek"] = function () {
+
+Array.prototype["peek"] = function<T>(): T {
   return this[this.length - 1];
 };
 
+type strnum = string | number
+
+let Decimal = require("decimal.js");
+
 // Implement isNumeric check
-const isNumeric = n => typeof n === "number" && !isNaN(n);
+const isNumeric = (n: any) => typeof n === "number" && !isNaN(n);
 
 // Define Operations properties
 export const mapButtons = new Map()
@@ -44,28 +49,28 @@ export const mapButtons = new Map()
 // Operator/Operand logic
 // Operations corresponding to Operators
 const Operations = { // Need to precise Decimal otherwise JS complains about add/div/mul/sub not existing
-"/": ([x, y, ...ys]) => [Decimal(y).div(x), ...ys],
-"*": ([x, y, ...ys]) => [Decimal(y).mul(x), ...ys],
-"+": ([x, y, ...ys]) => [Decimal(y).add(x), ...ys],
-"-": ([x, y, ...ys]) => [Decimal(y).sub(x), ...ys]
+"/": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).div(x), ...ys],
+"*": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).mul(x), ...ys],
+"+": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).add(x), ...ys],
+"-": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).sub(x), ...ys]
 };
 
 // Calling those operations
-const ApplyOp = (iniArr, op) => isNumeric(Number(op)) ? [Decimal(Number(op)), ...iniArr] : Operations[op](iniArr);
+const ApplyOp = (iniArr: strnum[], op: strnum) => isNumeric(Number(op)) ? [Decimal(Number(op)), ...iniArr] : Operations[op](iniArr);
 
 
 export const opLogic = {
-    "digit": (input, displayState) => opDigit(input, displayState),
-    "decimalpoint": (input, displayState) => opDecPoint(input, displayState),
-    "toggleSign": (input, displayState) => opSign(input, displayState),
-    "reset": (input, displayState) => opReset(input, displayState),
-    "binary operator": (input, displayState) => opBin(input, displayState),
-    "=": (input, displayState) => opEqual(input, displayState),
-    "(": (input, displayState) => opLPar(input, displayState),
-    ")": (input, displayState) => opRPar(input, displayState)
+    "digit": (input: number, displayState: CalcState) => opDigit(input, displayState),
+    "decimalpoint": (input: string, displayState: CalcState) => opDecPoint(input, displayState),
+    "toggleSign": (input: string, displayState: CalcState) => opSign(input, displayState),
+    "reset": (input: string, displayState: CalcState) => opReset(input, displayState),
+    "binary operator": (input: string, displayState: CalcState) => opBin(input, displayState),
+    "=": (input: string, displayState: CalcState) => opEqual(input, displayState),
+    "(": (input: string, displayState: CalcState) => opLPar(input, displayState),
+    ")": (input: string, displayState: CalcState) => opRPar(input, displayState)
 };
 
-const helperCheckPush = (displayState) => {
+const helperCheckPush = (displayState: CalcState) => {
         const {displayValue, infix} = displayState;
         if (infix.length > 0) {
             switch (infix.peek()) {
@@ -82,7 +87,7 @@ const helperCheckPush = (displayState) => {
         return displayState;
 };
 
-const opDigit = (input, displayState) => {
+const opDigit = (input: number, displayState: CalcState) => {
           const {displayValue, replaceDisplay} = displayState;
 
                     if (!replaceDisplay) {
@@ -94,7 +99,7 @@ const opDigit = (input, displayState) => {
           return displayState;
 };
 
-const opDecPoint = (_, displayState) => {
+const opDecPoint = (_: any, displayState: CalcState) => {
         const {displayValue} = displayState;
         if (!(/\./).test(displayValue)) {
             displayState.displayValue = displayValue + ".",
@@ -103,7 +108,7 @@ const opDecPoint = (_, displayState) => {
         return displayState;
 };
 
-const opSign = (_, displayState) => {
+const opSign = (_: any, displayState: CalcState) => {
         const {displayValue} = displayState;
         const newValue = parseFloat(displayValue) * -1;
 
@@ -111,10 +116,10 @@ const opSign = (_, displayState) => {
         return displayState;
 };
 
-const opReset = (_, displayState) => {
+const opReset = (_: any, displayState: CalcState) => {
 
           displayState = {
-            displayCalc: "", // will be set properly in ReactFincal.js
+            displayCalc: " ", // will be set properly in ReactFincal.js
             displayValue: "0",
             infix: [],
             RPN: [],
@@ -125,7 +130,7 @@ const opReset = (_, displayState) => {
         return displayState;
 };
 
-const opBin = (input, displayState) => {
+const opBin = (input: string, displayState: CalcState) => {
         const inpmap = mapButtons.get(input);
 
         displayState = helperCheckPush(displayState); // Check adjustment to infix and RPN display
@@ -151,7 +156,7 @@ const opBin = (input, displayState) => {
         return displayState;
 };
 
-const opEqual = (input, displayState) => {
+const opEqual = (input: string, displayState: CalcState) => {
 
         displayState = helperCheckPush(displayState); // Check adjustment to infix and RPN display
 
@@ -171,7 +176,7 @@ const opEqual = (input, displayState) => {
         return displayState;
 };
 
-const opLPar = (input, displayState) => {
+const opLPar = (input: string, displayState: CalcState) => {
     const {infix} = displayState;
     if (infix.length > 0 && infix.peek() === "=") {
                     displayState.infix = []; // if we just finished a compute, reset infix and RPN
@@ -185,7 +190,7 @@ const opLPar = (input, displayState) => {
     return displayState;
 };
 
-const opRPar = (input, displayState) => {
+const opRPar = (input: string, displayState: CalcState) => {
 
     if (!displayState.stack.includes("(")) {
         alert("Parenthesis Mismatch");
