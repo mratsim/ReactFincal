@@ -73,116 +73,110 @@ export const opLogic = {
 };
 
 const helperCheckPush = (displayState: CalcState) => {
-        const {displayValue, infix} = displayState;
-        if (infix.length > 0) {
-            switch (infix.peek()) {
-                case "=":
-                    displayState.infix = []; // if we just finished a compute, reset infix and RPN
-                    displayState.RPN   = [];
-                    break;
-                case ")":
-                    return displayState; // if we just had an ending parenthesis do not add again the previous value
-            }
+    const {displayValue, infix} = displayState;
+    if (infix.length > 0) {
+        switch (infix.peek()) {
+            case "=":
+                displayState.infix = []; // if we just finished a compute, reset infix and RPN
+                displayState.RPN = [];
+                break;
+            case ")":
+                return displayState; // if we just had an ending parenthesis do not add again the previous value
         }
-        displayState.infix.push(displayValue);
-        displayState.RPN.push(displayValue);
-        return displayState;
+    }
+    displayState.infix.push(displayValue);
+    displayState.RPN.push(displayValue);
+    return displayState;
 };
 
 const opDigit = (input: number, displayState: CalcState) => {
-          const {displayValue, replaceDisplay} = displayState;
+    const {displayValue, replaceDisplay} = displayState;
 
-                    if (!replaceDisplay) {
-                        displayState.displayValue = displayValue === "0" ? String(input) : displayValue + input;
-                    } else {
-                          displayState.displayValue = String(input);
-                          displayState.replaceDisplay = false;
-                    }
-          return displayState;
+    if (!replaceDisplay) {
+        displayState.displayValue = displayValue === "0" ? String(input) : displayValue + input;
+    } else {
+        displayState.displayValue = String(input);
+        displayState.replaceDisplay = false;
+    }
+    return displayState;
 };
 
 const opDecPoint = (_: any, displayState: CalcState) => {
-        const {displayValue} = displayState;
-        if (!(/\./).test(displayValue)) {
-            displayState.displayValue = displayValue + ".",
+    const {displayValue} = displayState;
+    if (!(/\./).test(displayValue)) {
+        displayState.displayValue = displayValue + ".",
             displayState.replaceDisplay = false;
-        }
-        return displayState;
+    }
+    return displayState;
 };
 
 const opSign = (_: any, displayState: CalcState) => {
-        const {displayValue} = displayState;
-        const newValue = parseFloat(displayValue) * -1;
+    const {displayValue} = displayState;
+    const newValue = parseFloat(displayValue) * -1;
 
-        displayState.displayValue = String(newValue);
-        return displayState;
+    displayState.displayValue = String(newValue);
+    return displayState;
 };
 
 const opReset = (_: any, displayState: CalcState) => {
-
-          displayState = {
-            displayCalc: " ", // will be set properly in ReactFincal.js
-            displayValue: "0",
-            infix: [],
-            RPN: [],
-            stack: [],
-            replaceDisplay: true
-          };
-
-        return displayState;
+    displayState = {
+        displayCalc: " ", // will be set properly in ReactFincal.js
+        displayValue: "0",
+        infix: [],
+        RPN: [],
+        stack: [],
+        replaceDisplay: true
+    };
+    return displayState;
 };
 
 const opBin = (input: string, displayState: CalcState) => {
-        const inpmap = mapButtons.get(input);
+    const inpmap = mapButtons.get(input);
 
-        displayState = helperCheckPush(displayState); // Check adjustment to infix and RPN display
-        displayState.infix.push(input);
+    displayState = helperCheckPush(displayState); // Check adjustment to infix and RPN display
+    displayState.infix.push(input);
 
-
-        // Left-associative operator : pop lower precedence op on the stack
-        // Right-associative operator : pop equal or lower precedence op on the stack
-        while (displayState.stack.length !== 0 &&
-          (
+    // Left-associative operator : pop lower precedence op on the stack
+    // Right-associative operator : pop equal or lower precedence op on the stack
+    while (displayState.stack.length !== 0 &&
+        (
             (inpmap[2] === "left" && inpmap[1] <= mapButtons.get(displayState.stack.peek())[1])
             ||
             (inpmap[2] === "right" && inpmap[1] < mapButtons.get(displayState.stack.peek())[1])
-          )
-        ) {
-          displayState.RPN.push(displayState.stack.pop());
-        }
+        )
+    ) {
+        displayState.RPN.push(displayState.stack.pop());
+    }
 
-        displayState.stack.push(input);
-
-          displayState.replaceDisplay = true;
-
-        return displayState;
+    displayState.stack.push(input);
+    displayState.replaceDisplay = true;
+    return displayState;
 };
 
 const opEqual = (input: string, displayState: CalcState) => {
+    displayState = helperCheckPush(displayState); // Check adjustment to infix and RPN display
 
-        displayState = helperCheckPush(displayState); // Check adjustment to infix and RPN display
+    while (!(displayState.stack.length === 0)) {
+        displayState.RPN.push(displayState.stack.pop());
+    }
 
-        while (!(displayState.stack.length === 0)) {
-          displayState.RPN.push(displayState.stack.pop());
-        }
+    // RPN computation
+    let stackRPN = [];
+    const result = displayState.RPN.reduce(ApplyOp, stackRPN)[0].toNumber();
 
-        // RPN computation
-        let stackRPN = [];
-        const result = displayState.RPN.reduce(ApplyOp, stackRPN)[0].toNumber();
+    displayState.infix.push(input);
 
-        displayState.infix.push(input);
+    displayState.displayValue = result;
+    displayState.replaceDisplay = true;
 
-          displayState.displayValue = result;
-          displayState.replaceDisplay = true;
-
-        return displayState;
+    return displayState;
 };
 
 const opLPar = (input: string, displayState: CalcState) => {
     const {infix} = displayState;
     if (infix.length > 0 && infix.peek() === "=") {
-                    displayState.infix = []; // if we just finished a compute, reset infix and RPN
-                    displayState.RPN   = []; // Helper function has extra functionnality
+        displayState.infix = []; // if we just finished a compute, reset infix and RPN
+        displayState.RPN = []; // Helper function has extra functionnality
     }
 
     displayState.stack.push(input);
@@ -203,10 +197,9 @@ const opRPar = (input: string, displayState: CalcState) => {
     displayState.infix.push(input);
 
     while (displayState.stack.peek() !== "(") {
-        displayState.RPN.push(displayState. stack.pop());
+        displayState.RPN.push(displayState.stack.pop());
     }
     displayState.stack.pop();
-
     displayState.replaceDisplay = true;
 
     return displayState;

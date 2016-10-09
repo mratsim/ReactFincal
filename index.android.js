@@ -1,2 +1,2 @@
 // retrieve Typescript output
-require("./tsout/root.android.js");
+require("./build/index.android.js");

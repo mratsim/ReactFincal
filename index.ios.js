@@ -1,2 +1,2 @@
 // retrieve Typescript output
-require("./tsout/root.ios.js");
+require("./build/index.ios.js");

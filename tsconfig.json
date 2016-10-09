@@ -6,11 +6,10 @@
         "jsx": "react",
         "noImplicitAny": false,
         "sourceMap": true,
-        "outDir": "tsout",
+        "outDir": "build",
+        "noImplicitReturns": true,
         "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "suppressImplicitAnyIndexErrors": true,
+        "suppressImplicitAnyIndexErrors": false,
         "lib":["es2016","dom"]
     },
     "filesGlob": [
@@ -20,6 +19,8 @@
     ],
     "exclude": [
         "node_modules",
-        "tsout"
+        "build",
+        "ios",
+        "android"
     ]
 }

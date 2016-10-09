@@ -62,8 +62,6 @@ let Style = StyleSheet.create({
     flex: 1,
     flexDirection: "row"
     }
-
-
 });
 
 export default Style;

@@ -6,7 +6,7 @@ var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build', function() {
     var tsResult = tsProject.src().pipe(ts(tsProject));
-    return tsResult.js.pipe(gulp.dest('tsout'));
+    return tsResult.js.pipe(gulp.dest('build'));
 });
 
 gulp.task('watch', ['build'], function() {
