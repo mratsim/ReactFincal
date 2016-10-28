@@ -3,7 +3,7 @@
 
 import {CalcState} from "./ReactFincal";
 
-import * as Decimal from "decimal.js";
+const Decimal = require("decimal.js");
 
 // Implement peek for array (used as stack)
 declare global {
