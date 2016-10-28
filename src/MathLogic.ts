@@ -1,8 +1,9 @@
 /// <reference path="../.vscode/typings/react-native/react-native.d.ts"/>
+/// <reference path="../typings/globals/decimal.js/index.d.ts" />
 
 import {CalcState} from "./ReactFincal";
 
-let Decimal = require("decimal.js");
+import * as Decimal from "decimal.js";
 
 // Implement peek for array (used as stack)
 declare global {
@@ -52,9 +53,9 @@ export const mapButtons = new Map()
 // Operations corresponding to Operators
 const Operations = { // Need to precise Decimal otherwise JS complains about add/div/mul/sub not existing
 "/": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).div(x), ...ys],
-"*": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).mul(x), ...ys],
-"+": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).add(x), ...ys],
-"-": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).sub(x), ...ys]
+"*": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).times(x), ...ys],
+"+": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).plus(x), ...ys],
+"-": ([x, y, ...ys]: Iterable<number>) => [Decimal(y).minus(x), ...ys]
 };
 
 // Calling those operations
