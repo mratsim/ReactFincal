@@ -1,3 +1,6 @@
+##Visual Studio COde ##
+.vscode
+
 # OSX
 #
 .DS_Store
@@ -131,3 +134,5 @@ xcuserdata
 *.moved-aside
 DerivedData
 *.xcuserstate
+
+
